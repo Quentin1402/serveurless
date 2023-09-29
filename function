@@ -1,0 +1,68 @@
+const { MongoClient } = require("mongodb");
+const { func } = require("@azure/functions");
+
+const uri = "mongodb://<username>:<password>@<your-cosmosdb-uri>";
+const dbName = "your-database-name";
+const collectionName = "your-collection-name";
+
+module.exports = async function (context, req) {
+  const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+  try {
+    await client.connect();
+
+    const database = client.db(dbName);
+    const collection = database.collection(collectionName);
+
+    switch (req.method) {
+      case "GET":
+        // Lire des documents
+        const documents = await collection.find().toArray();
+        context.res = {
+          status: 200,
+          body: documents,
+        };
+        break;
+      case "POST":
+        // Créer un nouveau document
+        const newItem = req.body;
+        const result = await collection.insertOne(newItem);
+        context.res = {
+          status: 201,
+          body: result.ops[0],
+        };
+        break;
+      case "PUT":
+        // Mettre à jour un document
+        const updatedItem = req.body;
+        const updateResult = await collection.replaceOne({ _id: updatedItem._id }, updatedItem);
+        context.res = {
+          status: 200,
+          body: updateResult.modifiedCount > 0 ? "Document mis à jour avec succès" : "Aucune mise à jour effectuée",
+        };
+        break;
+      case "DELETE":
+        // Supprimer un document
+        const documentId = req.params.id;
+        const deleteResult = await collection.deleteOne({ _id: documentId });
+        context.res = {
+          status: 200,
+          body: deleteResult.deletedCount > 0 ? "Document supprimé avec succès" : "Aucun document trouvé à supprimer",
+        };
+        break;
+      default:
+        context.res = {
+          status: 400,
+          body: "Méthode HTTP non prise en charge",
+        };
+        break;
+    }
+  } catch (error) {
+    context.res = {
+      status: 500,
+      body: error.message,
+    };
+  } finally {
+    client.close();
+  }
+};
