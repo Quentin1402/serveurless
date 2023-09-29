@@ -48,6 +48,6 @@ Connectez-vous à votre compte Azure : Rendez-vous sur le portail Azure et conne
         ![image](https://github.com/Quentin1402/serveurless/assets/113422793/7b66be4d-113e-4fc1-b773-414a0a508de5)
         Cliquez sur code + test.
         ![image](https://github.com/Quentin1402/serveurless/assets/113422793/f723297d-4d75-4f25-927f-9858daa602f9)
-        Ensuite mettez le code du fichier function à la place du code en exemple en vous assurant de remplacer "username", "password", "your-cosmosdb-uri", "your-database-name", et "your-collection-name" par les informations spécifiques à votre instance Cosmos DB.
+        Ensuite mettez le code du fichier function à la place du code en exemple en vous assurant de remplacer 'username', "password", "your-cosmosdb-uri", "your-database-name", et "your-collection-name" par les informations spécifiques à votre instance Cosmos DB.
    Votre fonction est maintenant créé.
 
